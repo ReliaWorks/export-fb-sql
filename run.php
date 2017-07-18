@@ -13,21 +13,22 @@ $reference = $firebase->getReference('/');
 
 $all = $reference->getData();
 
-$db = new SQLite3(__DIR__. '/db/data.db');
+$link = mysql_connect('127.0.0.1', 'root', 'stangetz');
+mysql_set_charset('utf8',$link);
 
-if ($db) {
+if ($link) {
     foreach ($all as $name => $data){
 
         switch ($name){
             case 'activities':
-                insertActivitiesAffiliations($db, $name, $data);
+                insertActivitiesAffiliations($name, $data);
                 break;
             case 'affiliations':
-                insertActivitiesAffiliations($db, $name, $data);
+                insertActivitiesAffiliations($name, $data);
                 break;
 
             case 'user_profiles':
-                insertProfiles($db, $data);
+                insertProfiles($data);
                 break;
 
         }
@@ -35,11 +36,11 @@ if ($db) {
 
 }
 
-function insertActivitiesAffiliations($db, $tableName, $data){
+function insertActivitiesAffiliations($tableName, $data){
 
     $query = 'DROP TABLE IF EXISTS ' . $tableName;
 
-    $db->exec($query);
+    $result = mysql_query($query);
 
     $query = <<<EOD
       CREATE TABLE IF NOT EXISTS $tableName (
@@ -49,7 +50,7 @@ function insertActivitiesAffiliations($db, $tableName, $data){
         uid STRING
         )
 EOD;
-    $db->exec($query);
+    $result = mysql_query($query);
 
     $query = '';
     foreach ($data as $id => $fields){
@@ -64,57 +65,57 @@ EOD;
     }
 
     echo $query;
-    $db->exec($query);
+    $result = mysql_query($query);
 
 }
 
 
 
-function insertProfiles($db, $data){
+function insertProfiles($data){
 
     $query = 'DROP TABLE IF EXISTS user_profiles';
-    $db->exec($query);
+    $result = mysql_query($query);
 
     $query = 'DROP TABLE IF EXISTS user_activities';
-    $db->exec($query);
+    $result = mysql_query($query);
 
     $query = 'DROP TABLE IF EXISTS user_affiliations';
-    $db->exec($query);
+    $result = mysql_query($query);
 
     $query = <<<EOD
       CREATE TABLE IF NOT EXISTS user_profiles (
-        uid STRING PRIMARY KEY,
-        description STRING,
-        email STRING,
-        latitude STRING,
-        longitude STRING,
-        first_name STRING, 
-        last_name STRING,
-        current_city STRING,
-        current_state STRING,
-        current_county STRING,
-        current_country STRING,
-        status STRING
+        uid VARCHAR(50) PRIMARY KEY,
+        description TEXT,
+        email VARCHAR(50),
+        latitude VARCHAR(50),
+        longitude VARCHAR(50),
+        first_name VARCHAR(50), 
+        last_name VARCHAR(50),
+        current_city VARCHAR(50),
+        current_state VARCHAR(50),
+        current_county VARCHAR(50),
+        current_country VARCHAR(50),
+        status VARCHAR(50)
         )
 EOD;
-    $db->exec($query);
+    $result = mysql_query($query);
 
     $query = <<<EOD
       CREATE TABLE IF NOT EXISTS user_activities (
-        uid STRING,
-        activity_id STRING
+        uid VARCHAR(50),
+        activity_id VARCHAR(50)
         )
 EOD;
-    $db->exec($query);
+    $result = mysql_query($query);
 
 
     $query = <<<EOD
       CREATE TABLE IF NOT EXISTS user_affiliations (
-        uid STRING,
-        affiliation_id STRING
+        uid VARCHAR(50),
+        affiliation_id VARCHAR(50)
         )
 EOD;
-    $db->exec($query);
+    $result = mysql_query($query);
 
     $query = '';
     foreach ($data as $uid => $fields){
@@ -145,7 +146,7 @@ EOD;
 
         }
         echo $sql;
-        $db->exec($sql);
+        $result = mysql_query($sql);
 
         $sql = '';
         foreach ($fields['affiliations'] as $id=>$item){
@@ -154,11 +155,11 @@ EOD;
 
         }
         echo $sql;
-        $db->exec($sql);
+        $result = mysql_query($sql);
     }
 
     echo $query;
-    $db->exec($query);
+    $result = mysql_query($query);
 
 }
 
