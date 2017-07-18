@@ -13,23 +13,25 @@ $reference = $firebase->getReference('/');
 
 $all = $reference->getData();
 
-$link = mysql_connect('127.0.0.1', 'root', 'stangetz');
-mysql_select_db('analytics', $link);
-mysql_set_charset('utf8',$link);
+$username = 'root';
+$password = 'stangetz';
+$host = '127.0.0.1';
+$db = 'analytics';
+$connection = new PDO("mysql:dbname=$db;host=$host", $username, $password);
 
-if ($link) {
+if ($connection) {
     foreach ($all as $name => $data){
 
         switch ($name){
             case 'activities':
-                insertActivitiesAffiliations($name, $data);
+                insertActivitiesAffiliations($connection,$name, $data);
                 break;
             case 'affiliations':
-                insertActivitiesAffiliations($name, $data);
+                insertActivitiesAffiliations($connection,$name, $data);
                 break;
 
             case 'user_profiles':
-                insertProfiles($data);
+                insertProfiles($connection,$data);
                 break;
 
         }
@@ -37,11 +39,11 @@ if ($link) {
 
 }
 
-function insertActivitiesAffiliations($tableName, $data){
+function insertActivitiesAffiliations($connection,$tableName, $data){
 
     $query = 'DROP TABLE IF EXISTS ' . $tableName;
-
-    $result = mysql_query($query);
+    $stmt = $connection->prepare($query);
+    $stmt->execute();
 
     $query = <<<EOD
       CREATE TABLE IF NOT EXISTS $tableName (
@@ -51,7 +53,8 @@ function insertActivitiesAffiliations($tableName, $data){
         uid STRING
         )
 EOD;
-    $result = mysql_query($query);
+    $stmt = $connection->prepare($query);
+    $stmt->execute();
 
     $query = '';
     foreach ($data as $id => $fields){
@@ -66,22 +69,26 @@ EOD;
     }
 
     echo $query;
-    $result = mysql_query($query);
+    $stmt = $connection->prepare($query);
+    $stmt->execute();
 
 }
 
 
 
-function insertProfiles($data){
+function insertProfiles($connection,$data){
 
     $query = 'DROP TABLE IF EXISTS user_profiles';
-    $result = mysql_query($query);
+    $stmt = $connection->prepare($query);
+    $stmt->execute();
 
     $query = 'DROP TABLE IF EXISTS user_activities';
-    $result = mysql_query($query);
+    $stmt = $connection->prepare($query);
+    $stmt->execute();
 
     $query = 'DROP TABLE IF EXISTS user_affiliations';
-    $result = mysql_query($query);
+    $stmt = $connection->prepare($query);
+    $stmt->execute();
 
     $query = <<<EOD
       CREATE TABLE IF NOT EXISTS user_profiles (
@@ -99,7 +106,8 @@ function insertProfiles($data){
         status VARCHAR(50)
         )
 EOD;
-    $result = mysql_query($query);
+    $stmt = $connection->prepare($query);
+    $stmt->execute();
 
     $query = <<<EOD
       CREATE TABLE IF NOT EXISTS user_activities (
@@ -107,7 +115,8 @@ EOD;
         activity_id VARCHAR(50)
         )
 EOD;
-    $result = mysql_query($query);
+    $stmt = $connection->prepare($query);
+    $stmt->execute();
 
 
     $query = <<<EOD
@@ -116,7 +125,8 @@ EOD;
         affiliation_id VARCHAR(50)
         )
 EOD;
-    $result = mysql_query($query);
+    $stmt = $connection->prepare($query);
+    $stmt->execute();
 
     $query = '';
     foreach ($data as $uid => $fields){
@@ -147,7 +157,9 @@ EOD;
 
         }
         echo $sql;
-        $result = mysql_query($sql);
+
+        $stmt = $connection->prepare($sql);
+        $stmt->execute();
 
         $sql = '';
         foreach ($fields['affiliations'] as $id=>$item){
@@ -156,11 +168,13 @@ EOD;
 
         }
         echo $sql;
-        $result = mysql_query($sql);
+        $stmt = $connection->prepare($sql);
+        $stmt->execute();
     }
 
     echo $query;
-    $result = mysql_query($query);
+    $stmt = $connection->prepare($query);
+    $stmt->execute();
 
 }
 
