@@ -1,0 +1,6 @@
+composer.phar
+.DS_Store
+.idea
+vendor
+.idea/vcs.xml
+db
