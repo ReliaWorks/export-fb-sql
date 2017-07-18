@@ -14,6 +14,7 @@ $reference = $firebase->getReference('/');
 $all = $reference->getData();
 
 $link = mysql_connect('127.0.0.1', 'root', 'stangetz');
+mysql_select_db('analytics', $link);
 mysql_set_charset('utf8',$link);
 
 if ($link) {
