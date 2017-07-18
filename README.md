@@ -1,1 +1,2 @@
-# Script that exports Firebase branches and move them to sqlite3
+# Export script
+Exports Wavelength Firebase branches and move them to sqlite3
