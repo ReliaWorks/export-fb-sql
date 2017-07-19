@@ -128,11 +128,11 @@ EOD;
         $fields['latitude'] = pg_escape_string($fields['latitude']);
         $fields['longitude'] = pg_escape_string($fields['longitude']);
 
-        $fields['current_city'] = pg_escape_string($fields['current_city']);
-        $fields['current_state'] = pg_escape_string($fields['current_state']);
-        $fields['current_county'] = pg_escape_string($fields['current_county']);
+        $fields['location']['city'] = pg_escape_string($fields['location']['city']);
+        $fields['location']['state'] = pg_escape_string($fields['location']['state']);
+        $fields['location']['county'] = pg_escape_string($fields['location']['county']);
 
-        $fields['current_state'] = pg_escape_string($fields['current_state']);
+        $fields['location']['state'] = pg_escape_string($fields['location']['state']);
         $fields['status'] = pg_escape_string($fields['status']);
 
         $query.="INSERT INTO w_user_profiles(uid, description, email, first_name,last_name,latitude,longitude,current_city, current_state,current_county, current_country, status) VALUES('$uid','{$fields['description']}','{$fields['email']}','{$fields['first_name']}', '{$fields['last_name']}', '{$fields['latitude']}', '{$fields['longitude']}', '{$fields['location']['city']}', '{$fields['location']['state']}', '{$fields['location']['county']}', '{$fields['location']['country']}', '{$fields['status']}'); \n";
@@ -143,12 +143,12 @@ EOD;
 
         foreach ($fields['activities'] as $activity=>$item){
 
-            $sql.="INSERT INTO w_user_activities(uid, activity_id) VALUES('$uid','{$activity}'); \n";
+            $sql ="INSERT INTO w_user_activities(uid, activity_id) VALUES('$uid','{$activity}'); \n";
+            pg_query($sql);
 
         }
-        echo $sql;
 
-        pg_query($sql);
+
 
         $sql = '';
 
@@ -156,11 +156,11 @@ EOD;
 
         foreach ($fields['affiliations'] as $id=>$item){
 
-            $sql.="INSERT INTO w_user_affiliations(uid, affiliation_id) VALUES('$uid','{$id}'); \n";
+            $sql ="INSERT INTO w_user_affiliations(uid, affiliation_id) VALUES('$uid','{$id}'); ";
+            pg_query($sql);
 
         }
-        echo $sql;
-        pg_query($sql);
+
     }
 
     echo $query;
