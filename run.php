@@ -59,7 +59,7 @@ EOD;
         $fields['name'] = pg_escape_string($fields['name']);
         $fields['uid'] = pg_escape_string($fields['uid']);
 
-        $query.="INSERT INTO $tableName(id, icon, name, uid) VALUES('$id','{$fields['icon']}','{$fields['name']}','{$fields['uid']}'); \n";
+        $query.="INSERT INTO w_$tableName(id, icon, name, uid) VALUES('$id','{$fields['icon']}','{$fields['name']}','{$fields['uid']}'); \n";
 
 
     }
@@ -137,9 +137,10 @@ EOD;
 
         $query.="INSERT INTO w_user_profiles(uid, description, email, first_name,last_name,latitude,longitude,current_city, current_state,current_county, current_country, status) VALUES('$uid','{$fields['description']}','{$fields['email']}','{$fields['first_name']}', '{$fields['last_name']}', '{$fields['latitude']}', '{$fields['longitude']}', '{$fields['location']['city']}', '{$fields['location']['state']}', '{$fields['location']['county']}', '{$fields['location']['country']}', '{$fields['status']}'); \n";
 
-
+        $fields['activities'] = $fields['activities']?:array();
 
         $sql = '';
+
         foreach ($fields['activities'] as $activity=>$item){
 
             $sql.="INSERT INTO w_user_activities(uid, activity_id) VALUES('$uid','{$activity}'); \n";
@@ -150,6 +151,9 @@ EOD;
         pg_query($sql);
 
         $sql = '';
+
+        $fields['affiliations'] = $fields['affiliations']?:array();
+
         foreach ($fields['affiliations'] as $id=>$item){
 
             $sql.="INSERT INTO w_user_affiliations(uid, affiliation_id) VALUES('$uid','{$id}'); \n";
