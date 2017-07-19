@@ -45,7 +45,7 @@ function insertActivitiesAffiliations($connection,$tableName, $data){
     $query = <<<EOD
       CREATE TABLE IF NOT EXISTS w_$tableName (
         id VARCHAR(50) PRIMARY KEY,
-        icon VARCHAR(100),
+        icon VARCHAR(500),
         name VARCHAR(50),
         uid VARCHAR(50)
         )
