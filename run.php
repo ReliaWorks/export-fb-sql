@@ -38,12 +38,12 @@ if ($connection) {
 
 function insertActivitiesAffiliations($connection,$tableName, $data){
 
-    $query = 'DROP TABLE IF EXISTS ' . $tableName;
+    $query = 'DROP TABLE IF EXISTS w_' . $tableName;
     pg_query($query);
 
 
     $query = <<<EOD
-      CREATE TABLE IF NOT EXISTS $tableName (
+      CREATE TABLE IF NOT EXISTS w_$tableName (
         id VARCHAR(50) PRIMARY KEY,
         icon VARCHAR(100),
         name VARCHAR(50),
@@ -73,17 +73,17 @@ EOD;
 
 function insertProfiles($connection,$data){
 
-    $query = 'DROP TABLE IF EXISTS user_profiles';
+    $query = 'DROP TABLE IF EXISTS w_user_profiles';
     pg_query($query);
 
-    $query = 'DROP TABLE IF EXISTS user_activities';
+    $query = 'DROP TABLE IF EXISTS w_user_activities';
     pg_query($query);
 
-    $query = 'DROP TABLE IF EXISTS user_affiliations';
+    $query = 'DROP TABLE IF EXISTS w_user_affiliations';
     pg_query($query);
 
     $query = <<<EOD
-      CREATE TABLE IF NOT EXISTS user_profiles (
+      CREATE TABLE IF NOT EXISTS w_user_profiles (
         uid VARCHAR(50) PRIMARY KEY,
         description TEXT,
         email VARCHAR(50),
@@ -101,7 +101,7 @@ EOD;
     pg_query($query);
 
     $query = <<<EOD
-      CREATE TABLE IF NOT EXISTS user_activities (
+      CREATE TABLE IF NOT EXISTS w_user_activities (
         uid VARCHAR(50),
         activity_id VARCHAR(50)
         )
@@ -110,7 +110,7 @@ EOD;
 
 
     $query = <<<EOD
-      CREATE TABLE IF NOT EXISTS user_affiliations (
+      CREATE TABLE IF NOT EXISTS w_user_affiliations (
         uid VARCHAR(50),
         affiliation_id VARCHAR(50)
         )
@@ -135,14 +135,14 @@ EOD;
         $fields['current_state'] = pg_escape_string($fields['current_state']);
         $fields['status'] = pg_escape_string($fields['status']);
 
-        $query.="INSERT INTO user_profiles(uid, description, email, first_name,last_name,latitude,longitude,current_city, current_state,current_county, current_country, status) VALUES('$uid','{$fields['description']}','{$fields['email']}','{$fields['first_name']}', '{$fields['last_name']}', '{$fields['latitude']}', '{$fields['longitude']}', '{$fields['location']['city']}', '{$fields['location']['state']}', '{$fields['location']['county']}', '{$fields['location']['country']}', '{$fields['status']}'); \n";
+        $query.="INSERT INTO w_user_profiles(uid, description, email, first_name,last_name,latitude,longitude,current_city, current_state,current_county, current_country, status) VALUES('$uid','{$fields['description']}','{$fields['email']}','{$fields['first_name']}', '{$fields['last_name']}', '{$fields['latitude']}', '{$fields['longitude']}', '{$fields['location']['city']}', '{$fields['location']['state']}', '{$fields['location']['county']}', '{$fields['location']['country']}', '{$fields['status']}'); \n";
 
 
 
         $sql = '';
         foreach ($fields['activities'] as $activity=>$item){
 
-            $sql.="INSERT INTO user_activities(uid, activity_id) VALUES('$uid','{$activity}'); \n";
+            $sql.="INSERT INTO w_user_activities(uid, activity_id) VALUES('$uid','{$activity}'); \n";
 
         }
         echo $sql;
@@ -152,7 +152,7 @@ EOD;
         $sql = '';
         foreach ($fields['affiliations'] as $id=>$item){
 
-            $sql.="INSERT INTO user_affiliations(uid, affiliation_id) VALUES('$uid','{$id}'); \n";
+            $sql.="INSERT INTO w_user_affiliations(uid, affiliation_id) VALUES('$uid','{$id}'); \n";
 
         }
         echo $sql;
