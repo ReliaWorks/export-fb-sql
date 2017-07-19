@@ -13,8 +13,7 @@ $reference = $firebase->getReference('/');
 
 $all = $reference->getData();
 
-$connection = pg_connect("host=ec2-23-23-248-162.compute-1.amazonaws.com dbname=daaqbc1amil5l4 user=dudtmyklemtlxv password=b7ab3c9de3ee9916fa208fa6bfdb091a
-d0f0edc6840671f2fc60a2ef670c7aaa")
+$connection = pg_connect("host=ec2-23-23-248-162.compute-1.amazonaws.com dbname=daaqbc1amil5l4 user=dudtmyklemtlxv password=b7ab3c9de3ee9916fa208fa6bfdb091ad0f0edc6840671f2fc60a2ef670c7aaa")
 or die('Could not connect: ' . pg_last_error());
 
 if ($connection) {
@@ -56,9 +55,9 @@ EOD;
     $query = '';
     foreach ($data as $id => $fields){
 
-        $fields['icon'] = SQLite3::escapeString($fields['icon']);
-        $fields['name'] = SQLite3::escapeString($fields['name']);
-        $fields['uid'] = SQLite3::escapeString($fields['uid']);
+        $fields['icon'] = pg_escape_string($fields['icon']);
+        $fields['name'] = pg_escape_string($fields['name']);
+        $fields['uid'] = pg_escape_string($fields['uid']);
 
         $query.="INSERT INTO $tableName(id, icon, name, uid) VALUES('$id','{$fields['icon']}','{$fields['name']}','{$fields['uid']}'); \n";
 
@@ -121,20 +120,20 @@ EOD;
     $query = '';
     foreach ($data as $uid => $fields){
 
-        $fields['description'] = SQLite3::escapeString($fields['description']);
-        $fields['email'] = SQLite3::escapeString($fields['email']);
-        $fields['first_name'] = SQLite3::escapeString($fields['first_name']);
+        $fields['description'] = pg_escape_string($fields['description']);
+        $fields['email'] = pg_escape_string($fields['email']);
+        $fields['first_name'] = pg_escape_string($fields['first_name']);
 
-        $fields['last_name'] = SQLite3::escapeString($fields['last_name']);
-        $fields['latitude'] = SQLite3::escapeString($fields['latitude']);
-        $fields['longitude'] = SQLite3::escapeString($fields['longitude']);
+        $fields['last_name'] = pg_escape_string($fields['last_name']);
+        $fields['latitude'] = pg_escape_string($fields['latitude']);
+        $fields['longitude'] = pg_escape_string($fields['longitude']);
 
-        $fields['current_city'] = SQLite3::escapeString($fields['current_city']);
-        $fields['current_state'] = SQLite3::escapeString($fields['current_state']);
-        $fields['current_county'] = SQLite3::escapeString($fields['current_county']);
+        $fields['current_city'] = pg_escape_string($fields['current_city']);
+        $fields['current_state'] = pg_escape_string($fields['current_state']);
+        $fields['current_county'] = pg_escape_string($fields['current_county']);
 
-        $fields['current_state'] = SQLite3::escapeString($fields['current_state']);
-        $fields['status'] = SQLite3::escapeString($fields['status']);
+        $fields['current_state'] = pg_escape_string($fields['current_state']);
+        $fields['status'] = pg_escape_string($fields['status']);
 
         $query.="INSERT INTO user_profiles(uid, description, email, first_name,last_name,latitude,longitude,current_city, current_state,current_county, current_country, status) VALUES('$uid','{$fields['description']}','{$fields['email']}','{$fields['first_name']}', '{$fields['last_name']}', '{$fields['latitude']}', '{$fields['longitude']}', '{$fields['location']['city']}', '{$fields['location']['state']}', '{$fields['location']['county']}', '{$fields['location']['country']}', '{$fields['status']}'); \n";
 
