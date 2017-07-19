@@ -13,11 +13,9 @@ $reference = $firebase->getReference('/');
 
 $all = $reference->getData();
 
-$username = 'root';
-$password = 'stangetz';
-$host = '127.0.0.1';
-$db = 'analytics';
-$connection = new PDO("mysql:dbname=$db;host=$host", $username, $password);
+$connection = pg_connect("host=ec2-23-23-248-162.compute-1.amazonaws.com dbname=daaqbc1amil5l4 user=dudtmyklemtlxv password=b7ab3c9de3ee9916fa208fa6bfdb091a
+d0f0edc6840671f2fc60a2ef670c7aaa")
+or die('Could not connect: ' . pg_last_error());
 
 if ($connection) {
     foreach ($all as $name => $data){
@@ -42,19 +40,18 @@ if ($connection) {
 function insertActivitiesAffiliations($connection,$tableName, $data){
 
     $query = 'DROP TABLE IF EXISTS ' . $tableName;
-    $stmt = $connection->prepare($query);
-    $stmt->execute();
+    pg_query($query);
+
 
     $query = <<<EOD
       CREATE TABLE IF NOT EXISTS $tableName (
-        id STRING PRIMARY KEY,
-        icon STRING,
-        name STRING,
-        uid STRING
+        id VARCHAR(50) PRIMARY KEY,
+        icon VARCHAR(100),
+        name VARCHAR(50),
+        uid VARCHAR(50)
         )
 EOD;
-    $stmt = $connection->prepare($query);
-    $stmt->execute();
+    pg_query($query);
 
     $query = '';
     foreach ($data as $id => $fields){
@@ -69,8 +66,7 @@ EOD;
     }
 
     echo $query;
-    $stmt = $connection->prepare($query);
-    $stmt->execute();
+    pg_query($query);
 
 }
 
@@ -79,16 +75,13 @@ EOD;
 function insertProfiles($connection,$data){
 
     $query = 'DROP TABLE IF EXISTS user_profiles';
-    $stmt = $connection->prepare($query);
-    $stmt->execute();
+    pg_query($query);
 
     $query = 'DROP TABLE IF EXISTS user_activities';
-    $stmt = $connection->prepare($query);
-    $stmt->execute();
+    pg_query($query);
 
     $query = 'DROP TABLE IF EXISTS user_affiliations';
-    $stmt = $connection->prepare($query);
-    $stmt->execute();
+    pg_query($query);
 
     $query = <<<EOD
       CREATE TABLE IF NOT EXISTS user_profiles (
@@ -106,8 +99,7 @@ function insertProfiles($connection,$data){
         status VARCHAR(50)
         )
 EOD;
-    $stmt = $connection->prepare($query);
-    $stmt->execute();
+    pg_query($query);
 
     $query = <<<EOD
       CREATE TABLE IF NOT EXISTS user_activities (
@@ -115,8 +107,7 @@ EOD;
         activity_id VARCHAR(50)
         )
 EOD;
-    $stmt = $connection->prepare($query);
-    $stmt->execute();
+    pg_query($query);
 
 
     $query = <<<EOD
@@ -125,8 +116,7 @@ EOD;
         affiliation_id VARCHAR(50)
         )
 EOD;
-    $stmt = $connection->prepare($query);
-    $stmt->execute();
+    pg_query($query);
 
     $query = '';
     foreach ($data as $uid => $fields){
@@ -158,8 +148,7 @@ EOD;
         }
         echo $sql;
 
-        $stmt = $connection->prepare($sql);
-        $stmt->execute();
+        pg_query($sql);
 
         $sql = '';
         foreach ($fields['affiliations'] as $id=>$item){
@@ -168,13 +157,11 @@ EOD;
 
         }
         echo $sql;
-        $stmt = $connection->prepare($sql);
-        $stmt->execute();
+        pg_query($sql);
     }
 
     echo $query;
-    $stmt = $connection->prepare($query);
-    $stmt->execute();
+    pg_query($query);
 
 }
 
