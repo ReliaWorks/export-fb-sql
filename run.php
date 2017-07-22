@@ -201,8 +201,8 @@ EOD;
         $fields['first_name'] = pg_escape_string($fields['first_name']);
 
         $fields['last_name'] = pg_escape_string($fields['last_name']);
-        $fields['latitude'] = pg_escape_string($fields['latitude']);
-        $fields['longitude'] = pg_escape_string($fields['longitude']);
+        $fields['latitude'] =  pg_escape_string($fields['geoLocation']['coords']['latitude']);
+        $fields['longitude'] = pg_escape_string($fields['geoLocation']['coords']['longitude']);
 
         $fields['location']['city'] = pg_escape_string($fields['location']['city']);
         $fields['location']['state'] = pg_escape_string($fields['location']['state']);
