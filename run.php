@@ -90,7 +90,7 @@ EOD;
 
     foreach ($data as $uid1 => $messages){
         foreach ($messages as $uid2 => $fields)
-            if ($uid1!='undefined'){
+            if ($uid1!='undefined' && isset($fields['conversationId']) && $fields['conversationId']){
                 $query.="INSERT INTO w_$tableName(uid1, uid2, conversation_id) VALUES('$uid1','$uid2','{$fields['conversationId']}'); \n";
                 pg_query($query);
             }
