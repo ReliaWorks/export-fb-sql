@@ -87,7 +87,7 @@ EOD;
 
     foreach ($data as $uid1 => $messages){
         foreach ($messages as $uid2 => $fields)
-            if ($uid1)
+            if ($uid1!='undefined')
                 $query.="INSERT INTO w_$tableName(uid1, uid2, conversation_id) VALUES('$uid1','$uid2','{$fields['conversationId']}'); \n";
     }
 
