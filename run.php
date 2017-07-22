@@ -26,7 +26,9 @@ if ($connection) {
             case 'affiliations':
                 insertActivitiesAffiliations($connection,$name, $data);
                 break;
-
+            case 'message_center':
+                insertMessageCenter($connection,$name, $data);
+                break;
             case 'user_profiles':
                 insertProfiles($connection,$data);
                 break;
@@ -69,7 +71,29 @@ EOD;
 
 }
 
+function insertMessageCenter($connection,$tableName, $data){
 
+    $query = 'DROP TABLE IF EXISTS w_' . $tableName;
+    pg_query($query);
+
+    $query = <<<EOD
+      CREATE TABLE IF NOT EXISTS w_$tableName (
+        uid1 VARCHAR(50) PRIMARY KEY,
+        uid2 VARCHAR(50),
+        conversation_id VARCHAR(50)
+        )
+EOD;
+    pg_query($query);
+
+    foreach ($data as $uid1 => $fields){
+        $query.="INSERT INTO w_$tableName(uid1, uid2, conversation_id) VALUES('$uid1','{$fields['otherUserId']}','{$fields['conversationId']}'); \n";
+    }
+
+    echo $query;
+
+    pg_query($query);
+
+}
 
 function insertProfiles($connection,$data){
 
