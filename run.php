@@ -118,7 +118,7 @@ function insertConversation($connection,$tableName, $data){
         otherUserPic VARCHAR(50),
         text VARCHAR(500),
         user_avatar VARCHAR(200),
-        username VARCHAR(50),
+        username VARCHAR(50)
         );
 EOD;
     pg_query($query);
@@ -136,8 +136,8 @@ EOD;
 
                 $fields['otherUserPic'] = pg_escape_string($fields['otherUserPic']);
                 $fields['text'] = pg_escape_string($fields['text']);
-                $fields['user_avatar'] = pg_escape_string($fields['user_avatar']);
-                $fields['username'] = pg_escape_string($fields['username']);
+                $fields['user_avatar'] = pg_escape_string($fields['user']['avatar']);
+                $fields['username'] = pg_escape_string($fields['user']['name']);
 
                 $query.="INSERT INTO w_$tableName(message_id, conversation_id, createdAt, otherUserId, otherUserName, otherUserPic, text, user_avatar, username) VALUES('$id','$conversationId','{$fields['createdAt']}','{$fields['otherUserId']}','{$fields['otherUserName']}','{$fields['otherUserPic']}','{$fields['text']}','{$fields['user']['avatar']}','{$fields['user']['name']}'); \n";
                 pg_query($query);
