@@ -110,7 +110,7 @@ function insertConversation($connection,$tableName, $data){
 
     $query = <<<EOD
       CREATE TABLE IF NOT EXISTS w_$tableName (
-        message_id VARCHAR(50) PRIMARY KEY,
+        message_id VARCHAR(50),
         conversation_id VARCHAR(50),
         createdAt VARCHAR(50),
         otherUserId VARCHAR(50),
