@@ -81,19 +81,21 @@ function insertMessageCenter($connection,$tableName, $data){
         uid1 VARCHAR(50) PRIMARY KEY,
         uid2 VARCHAR(50),
         conversation_id VARCHAR(50)
-        )
+        );
 EOD;
     pg_query($query);
 
+
+    $query='';
+
     foreach ($data as $uid1 => $messages){
         foreach ($messages as $uid2 => $fields)
-            if ($uid1!='undefined')
+            if ($uid1!='undefined'){
                 $query.="INSERT INTO w_$tableName(uid1, uid2, conversation_id) VALUES('$uid1','$uid2','{$fields['conversationId']}'); \n";
+                pg_query($query);
+            }
+
     }
-
-    echo $query;
-
-    pg_query($query);
 
 }
 
