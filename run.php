@@ -115,7 +115,7 @@ function insertConversation($connection,$tableName, $data){
         createdAt VARCHAR(50),
         otherUserId VARCHAR(50),
         otherUserName VARCHAR(50),
-        otherUserPic VARCHAR(50),
+        otherUserPic VARCHAR(200),
         text VARCHAR(500),
         user_avatar VARCHAR(200),
         username VARCHAR(50)
