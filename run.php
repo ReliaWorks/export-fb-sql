@@ -29,6 +29,9 @@ if ($connection) {
             case 'message_center':
                 insertMessageCenter($connection,$name, $data);
                 break;
+            case 'conversations':
+                insertConversation($connection,$name, $data);
+                break;
             case 'user_profiles':
                 insertProfiles($connection,$data);
                 break;
@@ -92,6 +95,51 @@ EOD;
         foreach ($messages as $uid2 => $fields)
             if ($uid1!='undefined' && isset($fields['conversationId']) && $fields['conversationId']){
                 $query.="INSERT INTO w_$tableName(uid1, uid2, conversation_id) VALUES('$uid1','$uid2','{$fields['conversationId']}'); \n";
+                pg_query($query);
+            }
+
+    }
+
+}
+
+
+function insertConversation($connection,$tableName, $data){
+
+    $query = 'DROP TABLE IF EXISTS w_' . $tableName;
+    pg_query($query);
+
+    $query = <<<EOD
+      CREATE TABLE IF NOT EXISTS w_$tableName (
+        message_id VARCHAR(50) PRIMARY KEY,
+        conversation_id VARCHAR(50),
+        createdAt VARCHAR(50),
+        otherUserId VARCHAR(50),
+        otherUserName VARCHAR(50),
+        otherUserPic VARCHAR(50),
+        text VARCHAR(500),
+        user_avatar VARCHAR(200),
+        username VARCHAR(50),
+        );
+EOD;
+    pg_query($query);
+
+
+    $query='';
+
+    foreach ($data as $conversationId => $messages){
+        foreach ($messages as $id => $fields)
+            if ($conversationId!='undefined' && $id){
+
+                $fields['createdAt'] = pg_escape_string($fields['createdAt']);
+                $fields['otherUserId'] = pg_escape_string($fields['otherUserId']);
+                $fields['otherUserName'] = pg_escape_string($fields['otherUserName']);
+
+                $fields['otherUserPic'] = pg_escape_string($fields['otherUserPic']);
+                $fields['text'] = pg_escape_string($fields['text']);
+                $fields['user_avatar'] = pg_escape_string($fields['user_avatar']);
+                $fields['username'] = pg_escape_string($fields['username']);
+
+                $query.="INSERT INTO w_$tableName(message_id, conversation_id, createdAt, otherUserId, otherUserName, otherUserPic, text, user_avatar, username) VALUES('$id','$conversationId','{$fields['createdAt']}','{$fields['otherUserId']}','{$fields['otherUserName']}','{$fields['otherUserPic']}','{$fields['text']}','{$fields['user']['avatar']}','{$fields['user']['name']}'); \n";
                 pg_query($query);
             }
 
