@@ -78,7 +78,7 @@ function insertMessageCenter($connection,$tableName, $data){
 
     $query = <<<EOD
       CREATE TABLE IF NOT EXISTS w_$tableName (
-        uid1 VARCHAR(50) PRIMARY KEY,
+        uid1 VARCHAR(50),
         uid2 VARCHAR(50),
         conversation_id VARCHAR(50)
         );
